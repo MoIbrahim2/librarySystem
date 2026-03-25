@@ -1,11 +1,15 @@
 public class Main {
     public static void main(String[] args) {
-        LibraryService AlexLibrary = new LibraryService();// Singleton
-        AlexLibrary .addBook(new Book("Harry Potter"));
-        AlexLibrary .addBook(new Book("Lord of the Rings"));
+        LibraryFacade libraryFacade = new LibraryFacade();
 
-        User user = new User("John",true);
+        libraryFacade.addBook(BookType.PHYSICAL, "Harry Potter");
+        libraryFacade.addBook(BookType.HISTORICAL, "Lord of the Rings");
+        libraryFacade.addPremiumBook(BookType.EBOOK, "Clean Code");
 
+        User premiumUser = new User("John", true);
+        User regularUser = new User("Mike", false);
 
+        libraryFacade.handleBorrowRequest("Clean Code", premiumUser);
+        libraryFacade.handleBorrowRequest("Clean Code", regularUser);
     }
 }

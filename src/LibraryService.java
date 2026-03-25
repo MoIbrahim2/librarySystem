@@ -2,12 +2,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryService {
-    private LibraryService instance;
-    private List<Book> books = new ArrayList<>();
+    private static final LibraryService INSTANCE = new LibraryService();
+    private final List<Book> books = new ArrayList<>();
+    private final BorrowRequestHandler borrowRequestHandler;
 
-    LibraryService(){
-
+    private LibraryService() {
+        BorrowRequestHandler librarian = new Librarian();
+        librarian.setNext(new Manager());
+        borrowRequestHandler = librarian;
     }
+
+    public static LibraryService getInstance() {
+        return INSTANCE;
+    }
+
     public void addBook(Book book) {
         books.add(book);
     }
@@ -21,19 +29,23 @@ public class LibraryService {
         return null;
     }
 
-    public void borrowBook(String title,User user) {
-        Book book = findBook(title);
-        if (book != null) {
-            book.borrowBook(user);
-        } else {
-            System.out.println("Book not found.");
-        }
+    public void borrowBook(String title, User user) {
+        borrowRequestHandler.handle(new BorrowRequest(title, user), this);
     }
 
     public void returnBook(String title) {
         Book book = findBook(title);
         if (book != null) {
             book.returnBook();
+        } else {
+            System.out.println("Book not found.");
+        }
+    }
+
+    public void completeBorrow(BorrowRequest request) {
+        Book book = findBook(request.getBookTitle());
+        if (book != null) {
+            book.borrowBook(request.getUser());
         } else {
             System.out.println("Book not found.");
         }
