@@ -8,7 +8,7 @@ public class LibraryService {
 
     private LibraryService() {
         BorrowRequestHandler librarian = new Librarian();
-        librarian.setNext(new Manager());
+        librarian.setNext(new Manager()).setNext(new Director());
         borrowRequestHandler = librarian;
     }
 
@@ -30,7 +30,21 @@ public class LibraryService {
     }
 
     public void borrowBook(String title, User user) {
-        borrowRequestHandler.handle(new BorrowRequest(title, user), this);
+        borrowBook(title, user, 7);
+    }
+
+    public void borrowBook(String title, User user, int requestedDays) {
+        if (findBook(title) == null) {
+            System.out.println("Book not found: " + title);
+            return;
+        }
+
+        if (requestedDays <= 0) {
+            System.out.println("Requested days must be greater than zero.");
+            return;
+        }
+
+        borrowRequestHandler.handle(new BorrowRequest(title, user, requestedDays), this);
     }
 
     public void returnBook(String title) {

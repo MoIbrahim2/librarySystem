@@ -1,18 +1,36 @@
 public class Book implements BookInterface{
-    private String title;
+    private final String title;
     private boolean isAvailable;
+    private final String authorName;
+    private final int year;
 
     public Book(String title) {
+        this(title, true, "Unknown", 0);
+    }
+
+    public Book(String title, boolean isAvailable, String authorName, int year) {
         this.title = title;
-        this.isAvailable = true;
+        this.isAvailable = isAvailable;
+        this.authorName = authorName;
+        this.year = year;
     }
 
     public boolean isAvailable() {
         return isAvailable;
     }
+
     public String getTitle() {
         return title;
     }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
     public void borrowBook(User user) {
         if (isAvailable) {
             isAvailable = false;
@@ -26,6 +44,4 @@ public class Book implements BookInterface{
         isAvailable = true;
         System.out.println(title + " has been returned.");
     }
-
-
 }

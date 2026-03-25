@@ -7,12 +7,20 @@ public abstract class BorrowRequestHandler {
     }
 
     public void handle(BorrowRequest request, LibraryService libraryService) {
-        boolean shouldContinue = process(request, libraryService);
-
-        if (shouldContinue && nextHandler != null) {
-            nextHandler.handle(request, libraryService);
+        if (canApprove(request)) {
+            approve(request, libraryService);
+            return;
         }
+
+        if (nextHandler != null) {
+            nextHandler.handle(request, libraryService);
+            return;
+        }
+
+        System.out.println("No approver is available for " + request.getRequestedDays() + " requested days.");
     }
 
-    protected abstract boolean process(BorrowRequest request, LibraryService libraryService);
+    protected abstract boolean canApprove(BorrowRequest request);
+
+    protected abstract void approve(BorrowRequest request, LibraryService libraryService);
 }

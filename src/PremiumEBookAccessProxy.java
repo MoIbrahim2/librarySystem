@@ -12,6 +12,16 @@ public class PremiumEBookAccessProxy extends Book implements BorrowAccessPolicy 
     }
 
     @Override
+    public String getAuthorName() {
+        return eBook.getAuthorName();
+    }
+
+    @Override
+    public int getYear() {
+        return eBook.getYear();
+    }
+
+    @Override
     public boolean isAvailable() {
         return eBook.isAvailable();
     }

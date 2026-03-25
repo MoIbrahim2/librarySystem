@@ -1,12 +1,13 @@
 public class Librarian extends BorrowRequestHandler {
     @Override
-    protected boolean process(BorrowRequest request, LibraryService libraryService) {
-        if (libraryService.findBook(request.getBookTitle()) == null) {
-            System.out.println("Librarian rejected the request. Book not found: " + request.getBookTitle());
-            return false;
-        }
+    protected boolean canApprove(BorrowRequest request) {
+        return request.getRequestedDays() <= 7;
+    }
 
-        System.out.println("Librarian received the borrowing request for: " + request.getBookTitle());
-        return true;
+    @Override
+    protected void approve(BorrowRequest request, LibraryService libraryService) {
+        System.out.println("Librarian approved the borrowing request for: "
+                + request.getBookTitle() + " for " + request.getRequestedDays() + " days.");
+        libraryService.completeBorrow(request);
     }
 }
